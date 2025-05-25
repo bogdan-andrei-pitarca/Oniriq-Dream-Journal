@@ -1,0 +1,78 @@
+.file-upload-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #2a1934;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.file-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 2px dashed #6a4c93;
+    border-radius: 4px;
+    background-color: #331440;
+    color: white;
+    cursor: pointer;
+}
+
+.file-input:hover {
+    border-color: #ae0bcb;
+}
+
+.file-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.upload-progress {
+    margin-top: 20px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #331440;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #ae0bcb;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    margin-top: 10px;
+    text-align: center;
+    color: white;
+    font-size: 14px;
+}
+
+.cancel-button {
+    display: block;
+    margin: 10px auto;
+    padding: 8px 16px;
+    background-color: #dd0707;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-button:hover {
+    background-color: #cc0000;
+}
+
+.upload-error {
+    color: #dd0707;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 14px;
+} 

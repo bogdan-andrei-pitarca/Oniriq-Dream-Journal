@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Send+Flowers&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #331440;
+}
+
+.read-dream-container {
+    max-width: 700px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.back-button {
+    background: darkgreen;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.dream-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.dream-date {
+    font-size: 16px;
+    color: gray;
+    margin-bottom: 10px;
+}
+
+.dream-content {
+    font-size: 18px;
+    line-height: 1.5;
+    text-align: justify;
+    padding: 10px;
+    background: #a8a8a8;
+    border-radius: 8px;
+}
+
+.dream-tags {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.tag {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #705aac;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.loading-message {
+    text-align: center;
+    font-size: 18px;
+    color: gray;
+}

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import "./edit.css";
@@ -231,146 +231,148 @@ export default function EditDream() {
     }
 
     return (
-        <div className="edit-dream-container">
-            <div className="edit-dream-box">
-                <div className="left-side">
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Edit title..."
-                        className="dream-input"
-                        data-testid="edit-title-input"
-                    />
-                    <textarea
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        placeholder="Edit content..."
-                        className="dream-textarea"
-                        data-testid="edit-content-textarea"
-                    />
-                    <div className="checkbox-section">
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={isLucid}
-                                onChange={(e) => setIsLucid(e.target.checked)}
-                                data-testid="lucid-checkbox"
-                            />
-                            Lucid Dream
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={isNightmare}
-                                onChange={(e) => setIsNightmare(e.target.checked)}
-                                data-testid="nightmare-checkbox"
-                            />
-                            Nightmare
-                        </label>
-                    </div>
-                </div>
-                <div className="right-side">
-                    <div className="tag-section">
-                        <h3>Tags</h3>
-                        <div className="tags-list">
-                            {tags.map((tag, index) => (
-                                <div key={index} className="tag" data-testid={`tag-${tag}`}>
-                                    <Image
-                                        src={getTagIcon(tag)}
-                                        alt={tag}
-                                        width={24}
-                                        height={24}
-                                        className="tag-icon"
-                                    />
-                                    <span>{tag}</span>
-                                    <button
-                                        className="tag-button"
-                                        onClick={() =>
-                                            setTags((prevTags) =>
-                                                prevTags.filter((_, i) => i !== index)
-                                            )
-                                        }
-                                        data-testid={`remove-tag-button-${tag}`}
-                                    >
-                                        ×
-                                    </button>
-                                </div>
-                            ))}
+        <Suspense fallback={<div>Loading...</div>}>
+            <div className="edit-dream-container">
+                <div className="edit-dream-box">
+                    <div className="left-side">
+                        <input
+                            type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            placeholder="Edit title..."
+                            className="dream-input"
+                            data-testid="edit-title-input"
+                        />
+                        <textarea
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            placeholder="Edit content..."
+                            className="dream-textarea"
+                            data-testid="edit-content-textarea"
+                        />
+                        <div className="checkbox-section">
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={isLucid}
+                                    onChange={(e) => setIsLucid(e.target.checked)}
+                                    data-testid="lucid-checkbox"
+                                />
+                                Lucid Dream
+                            </label>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={isNightmare}
+                                    onChange={(e) => setIsNightmare(e.target.checked)}
+                                    data-testid="nightmare-checkbox"
+                                />
+                                Nightmare
+                            </label>
                         </div>
-                        <h4>Add Tags</h4>
-                        <div className="tags-list">
-                            {availableTags
-                                .filter((tag) => !tags.includes(tag))
-                                .map((tag, index) => (
-                                    <div key={index} className="add-tag" data-testid={`available-tag-${tag}`}>
+                    </div>
+                    <div className="right-side">
+                        <div className="tag-section">
+                            <h3>Tags</h3>
+                            <div className="tags-list">
+                                {tags.map((tag, index) => (
+                                    <div key={index} className="tag" data-testid={`tag-${tag}`}>
+                                        <Image
+                                            src={getTagIcon(tag)}
+                                            alt={tag}
+                                            width={24}
+                                            height={24}
+                                            className="tag-icon"
+                                        />
                                         <span>{tag}</span>
                                         <button
-                                            className="add-tag-button"
-                                            onClick={() => handleAddTag(tag)}
-                                            data-testid={`add-tag-button-${tag}`}
+                                            className="tag-button"
+                                            onClick={() =>
+                                                setTags((prevTags) =>
+                                                    prevTags.filter((_, i) => i !== index)
+                                                )
+                                            }
+                                            data-testid={`remove-tag-button-${tag}`}
                                         >
-                                            <Image
-                                                src="/pluscircle.svg"
-                                                alt="Add"
-                                                width={16}
-                                                height={16}
-                                                className="plus-icon"
-                                            />
+                                            ×
                                         </button>
                                     </div>
                                 ))}
+                            </div>
+                            <h4>Add Tags</h4>
+                            <div className="tags-list">
+                                {availableTags
+                                    .filter((tag) => !tags.includes(tag))
+                                    .map((tag, index) => (
+                                        <div key={index} className="add-tag" data-testid={`available-tag-${tag}`}>
+                                            <span>{tag}</span>
+                                            <button
+                                                className="add-tag-button"
+                                                onClick={() => handleAddTag(tag)}
+                                                data-testid={`add-tag-button-${tag}`}
+                                            >
+                                                <Image
+                                                    src="/pluscircle.svg"
+                                                    alt="Add"
+                                                    width={16}
+                                                    height={16}
+                                                    className="plus-icon"
+                                                />
+                                            </button>
+                                        </div>
+                                    ))}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="file-upload-section">
-                <h2>Upload Files</h2>
-                <FileUpload
-                    entityId={dreamId || ""} // Provide a fallback value if dreamId is null
-                    onUploadSuccess={(fileData) => {
-                        setFiles((prevFiles) => [
-                            ...prevFiles,
-                            {
-                                ...fileData,
-                                type: "video/mp4", // Add the correct MIME type here
-                            },
-                        ]);
-                    }}
-                    onUploadError={(error) => {
-                        console.error("Upload error:", error);
-                        alert("Failed to upload file: " + error);
-                    }}
-                    maxFileSize={20 * 1024 * 1024 * 1024} // 20GB
-                    acceptedFileTypes="video/*"
-                />
-                {files.map((file, index) => (
-                    <div key={index}>
-                        <p>{file.filename}</p>
-                        {file.type.startsWith("video/") && (
-                            <video controls width="300">
-                                <source src={file.path} type={file.type} />
-                                Your browser does not support the video tag.
-                            </video>
-                        )}
+                <div className="file-upload-section">
+                    <h2>Upload Files</h2>
+                    <FileUpload
+                        entityId={dreamId || ""} // Provide a fallback value if dreamId is null
+                        onUploadSuccess={(fileData) => {
+                            setFiles((prevFiles) => [
+                                ...prevFiles,
+                                {
+                                    ...fileData,
+                                    type: "video/mp4", // Add the correct MIME type here
+                                },
+                            ]);
+                        }}
+                        onUploadError={(error) => {
+                            console.error("Upload error:", error);
+                            alert("Failed to upload file: " + error);
+                        }}
+                        maxFileSize={20 * 1024 * 1024 * 1024} // 20GB
+                        acceptedFileTypes="video/*"
+                    />
+                    {files.map((file, index) => (
+                        <div key={index}>
+                            <p>{file.filename}</p>
+                            {file.type.startsWith("video/") && (
+                                <video controls width="300">
+                                    <source src={file.path} type={file.type} />
+                                    Your browser does not support the video tag.
+                                </video>
+                            )}
+                        </div>
+                    ))}
+                </div>
+                <div className="buttons">
+                    <div className="buttons-row">
+                        <button className="cancel" onClick={handleCancel} data-testid="cancel-button">
+                            Cancel
+                        </button>
+                        <button className="save" onClick={handleSave} data-testid="save-button">
+                            Save
+                        </button>
                     </div>
-                ))}
-            </div>
-            <div className="buttons">
-                <div className="buttons-row">
-                    <button className="cancel" onClick={handleCancel} data-testid="cancel-button">
-                        Cancel
-                    </button>
-                    <button className="save" onClick={handleSave} data-testid="save-button">
-                        Save
-                    </button>
+                </div>
+                <div className="status-indicator">
+                {!isOnline && <p>⚠️ You are offline.</p>}
+                {isOnline && !isServerAvailable && <p>⚠️ Server is unavailable.</p>}
+                {isOnline && isServerAvailable && <p>✅ You are online and connected to the server.</p>}
                 </div>
             </div>
-            <div className="status-indicator">
-            {!isOnline && <p>⚠️ You are offline.</p>}
-            {isOnline && !isServerAvailable && <p>⚠️ Server is unavailable.</p>}
-            {isOnline && isServerAvailable && <p>✅ You are online and connected to the server.</p>}
-            </div>
-        </div>
+        </Suspense>
     );
 }

@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:5000/api/dreams"; // Update with your backend URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/api/dreams` : "http://localhost:5000/api/dreams";
 
 const getAuthHeader = () => {
     const token = localStorage.getItem('token');

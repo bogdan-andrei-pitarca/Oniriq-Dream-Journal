@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import "./read.css";
@@ -55,37 +55,39 @@ export default function ReadDream() {
     if (!dream) return <p className="loading-message" data-testid="loading-message">Loading dream details...</p>;
 
     return (
-        <div className="read-dream-container">
-            <button
-                className="back-button"
-                onClick={() => router.push("/journal")}
-                data-testid="back-button"
-            >
-                ← Back to Journal
-            </button>
+        <Suspense fallback={<div>Loading...</div>}>
+            <div className="read-dream-container">
+                <button
+                    className="back-button"
+                    onClick={() => router.push("/journal")}
+                    data-testid="back-button"
+                >
+                    ← Back to Journal
+                </button>
 
-            <h1 className="dream-title" data-testid="dream-title">{dream.title}</h1>
-            <p className="dream-date" data-testid="dream-date">{dream.date}</p>
-            <p className="dream-content" data-testid="dream-content">{dream.content}</p>
+                <h1 className="dream-title" data-testid="dream-title">{dream.title}</h1>
+                <p className="dream-date" data-testid="dream-date">{dream.date}</p>
+                <p className="dream-content" data-testid="dream-content">{dream.content}</p>
 
-            <div className="dream-tags">
-                {dream.tags.map(tag => (
-                    <span key={tag} className="tag" data-testid={`dream-tag-${tag}`}>
-                        <Image
-                            src={`/${tag.toLowerCase().replace(/ [&]+/g, "").replace(/ /g, "-")}.png`}
-                            alt={tag}
-                            width={24}
-                            height={24}
-                        />
-                        {tag}
-                    </span>
-                ))}
+                <div className="dream-tags">
+                    {dream.tags.map(tag => (
+                        <span key={tag} className="tag" data-testid={`dream-tag-${tag}`}>
+                            <Image
+                                src={`/${tag.toLowerCase().replace(/ [&]+/g, "").replace(/ /g, "-")}.png`}
+                                alt={tag}
+                                width={24}
+                                height={24}
+                            />
+                            {tag}
+                        </span>
+                    ))}
+                </div>
+                <div className="status-indicator">
+                {!isOnline && <p>⚠️ You are offline.</p>}
+                {isOnline && !isServerAvailable && <p>⚠️ Server is unavailable.</p>}
+                {isOnline && isServerAvailable && <p>✅ You are online and connected to the server.</p>}
+                </div>
             </div>
-            <div className="status-indicator">
-            {!isOnline && <p>⚠️ You are offline.</p>}
-            {isOnline && !isServerAvailable && <p>⚠️ Server is unavailable.</p>}
-            {isOnline && isServerAvailable && <p>✅ You are online and connected to the server.</p>}
-            </div>
-        </div>
+        </Suspense>
     );
 }

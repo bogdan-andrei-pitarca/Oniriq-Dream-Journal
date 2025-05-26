@@ -3,7 +3,7 @@ import { useDreamContext } from "../context/DreamContext";
 import { Dream } from "../types/dreamType";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import "./journal.css";
 import { useNetworkStatus } from "../hooks/useNetworkStatus";
 import { useWebSocket } from "../hooks/useWebSocket";
@@ -294,345 +294,347 @@ export default function Journal() {
     const chartData = prepareChartData();
 
     return (
-        <div className="journal-container">
-            <h1 className="journal-title">Journal</h1>
-            <div className="filter-container">
-                <Image
-                    src="/filterpng.png"
-                    alt="Filter"
-                    width={24}
-                    height={24}
-                    className="filter-icon"
-                    onClick={() => setIsFilterModalOpen(true)}
-                />
-                <h2 className="filter-text">Filter by...</h2>
-            </div>
-            {isFilterModalOpen && (
-                <div className="filter-modal">
-                    <div className="modal-content">
-                        <h2>Filter Dreams</h2>
-                        <div className="filter-options">
-                            <label>
-                                Tag:
-                                <select
-                                    value={filterTag}
-                                    onChange={(e) => {
-                                        setFilterTag(e.target.value);
-                                        setCurrentPage(1);
-                                        setHasMore(true);
-                                    }}
-                                >
-                                    <option value="">All</option>
-                                    <option value="Location">Location</option>
-                                    <option value="People">People</option>
-                                    <option value="Creatures & Animals">
-                                        Creatures & Animals
-                                    </option>
-                                    <option value="Activities">Activities</option>
-                                    <option value="Lucid">Lucid</option>
-                                    <option value="Nightmare">Nightmare</option>
-                                </select>
-                            </label>
-                            <label>
-                                Date:
-                                <input
-                                    type="date"
-                                    value={filterDate}
-                                    onChange={(e) => {
-                                        setFilterDate(e.target.value);
-                                        setCurrentPage(1);
-                                        setHasMore(true);
-                                    }}
-                                />
-                            </label>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    checked={filterLucid}
-                                    onChange={(e) => {
-                                        setFilterLucid(e.target.checked);
-                                        setCurrentPage(1);
-                                        setHasMore(true);
-                                    }}
-                                />
-                                Lucid
-                            </label>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    checked={filterNightmare}
-                                    onChange={(e) => {
-                                        setFilterNightmare(e.target.checked);
-                                        setCurrentPage(1);
-                                        setHasMore(true);
-                                    }}
-                                />
-                                Nightmare
-                            </label>
-                            <label>
-                                Sort by:
-                                <select
-                                    value={sortOrder}
-                                    onChange={(e) => {
-                                        setSortOrder(e.target.value as "asc" | "desc" | "dateAsc" | "dateDesc" | "");
-                                        setCurrentPage(1);
-                                        setHasMore(true);
-                                    }}
-                                >
-                                    <option value="">None</option>
-                                    <option value="asc">Title (A-Z)</option>
-                                    <option value="desc">Title (Z-A)</option>
-                                    <option value="dateAsc">Date (Oldest)</option>
-                                    <option value="dateDesc">Date (Newest)</option>
-                                </select>
-                            </label>
-                        </div>
-                        <div className="modal-buttons">
-                            <button onClick={() => setIsFilterModalOpen(false)}>Close</button>
+        <Suspense fallback={<div>Loading...</div>}>
+            <div className="journal-container">
+                <h1 className="journal-title">Journal</h1>
+                <div className="filter-container">
+                    <Image
+                        src="/filterpng.png"
+                        alt="Filter"
+                        width={24}
+                        height={24}
+                        className="filter-icon"
+                        onClick={() => setIsFilterModalOpen(true)}
+                    />
+                    <h2 className="filter-text">Filter by...</h2>
+                </div>
+                {isFilterModalOpen && (
+                    <div className="filter-modal">
+                        <div className="modal-content">
+                            <h2>Filter Dreams</h2>
+                            <div className="filter-options">
+                                <label>
+                                    Tag:
+                                    <select
+                                        value={filterTag}
+                                        onChange={(e) => {
+                                            setFilterTag(e.target.value);
+                                            setCurrentPage(1);
+                                            setHasMore(true);
+                                        }}
+                                    >
+                                        <option value="">All</option>
+                                        <option value="Location">Location</option>
+                                        <option value="People">People</option>
+                                        <option value="Creatures & Animals">
+                                            Creatures & Animals
+                                        </option>
+                                        <option value="Activities">Activities</option>
+                                        <option value="Lucid">Lucid</option>
+                                        <option value="Nightmare">Nightmare</option>
+                                    </select>
+                                </label>
+                                <label>
+                                    Date:
+                                    <input
+                                        type="date"
+                                        value={filterDate}
+                                        onChange={(e) => {
+                                            setFilterDate(e.target.value);
+                                            setCurrentPage(1);
+                                            setHasMore(true);
+                                        }}
+                                    />
+                                </label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        checked={filterLucid}
+                                        onChange={(e) => {
+                                            setFilterLucid(e.target.checked);
+                                            setCurrentPage(1);
+                                            setHasMore(true);
+                                        }}
+                                    />
+                                    Lucid
+                                </label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        checked={filterNightmare}
+                                        onChange={(e) => {
+                                            setFilterNightmare(e.target.checked);
+                                            setCurrentPage(1);
+                                            setHasMore(true);
+                                        }}
+                                    />
+                                    Nightmare
+                                </label>
+                                <label>
+                                    Sort by:
+                                    <select
+                                        value={sortOrder}
+                                        onChange={(e) => {
+                                            setSortOrder(e.target.value as "asc" | "desc" | "dateAsc" | "dateDesc" | "");
+                                            setCurrentPage(1);
+                                            setHasMore(true);
+                                        }}
+                                    >
+                                        <option value="">None</option>
+                                        <option value="asc">Title (A-Z)</option>
+                                        <option value="desc">Title (Z-A)</option>
+                                        <option value="dateAsc">Date (Oldest)</option>
+                                        <option value="dateDesc">Date (Newest)</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <div className="modal-buttons">
+                                <button onClick={() => setIsFilterModalOpen(false)}>Close</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
-            <div className="main-content">
-            <ul className="dream-list">
-                    {(dreams || []).map((dream, index) => {
-        const category = getCategory(dream);
-                        const isLastDream = index === dreams.length - 1;
-        return (
-            <li
-                                key={`${dream.id}-${index}`}
-                                ref={isLastDream ? lastDreamElementRef : null}
-                className={`dream-item ${category}`}
-                data-testid={`dream-item-${dream.id}`}
-            >
-                <div className="dream-header">
-                    <span className="dream-date" data-testid={`dream-date-${dream.id}`}>
-                        {dream.date}
-                    </span>
-                </div>
-                <h2 data-testid={`dream-title-${dream.id}`}>{dream.title}</h2>
-                <p data-testid={`dream-content-${dream.id}`}>{dream.content}</p>
-                                {dream.files && dream.files.length > 0 && (
-                                    <div className="dream-files">
-                                        {dream.files.map((file, index) => (
-                                            <div key={index} className="dream-file">
-                                                <div className="file-name">{file.filename}</div>
-                                                {file.type.startsWith("video/") ? (
-                                                    <div className="video-container">
-                                                        <video
-                                                            controls
-                                                            playsInline
-                                                            preload="metadata"
-                                                            onError={(e) => {
-                                                                const target = e.target as HTMLVideoElement;
-                                                                console.error('Video playback error:', {
-                                                                    code: target.error?.code,
-                                                                    message: target.error?.message
-                                                                });
-                                                            }}
-                                                        >
-                                                            <source 
-                                                                src={`http://localhost:5000/api/dreams/download/${encodeURIComponent(file.filename)}`}
-                                                                type={file.type}
-                                                            />
-                                                            Your browser does not support the video tag.
-                                                        </video>
-                                                    </div>
-                                                ) : (
-                                                    <div>Unsupported file type: {file.type}</div>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                <p className="word-count" data-testid={`dream-word-count-${dream.id}`}>
-                    Word Count: {dream.wordCount}
-                </p>
-                <div className="dream-tags">
-                    {dream.tags.map((tag, tagIndex) => (
-                        <div key={tagIndex} className="tag" data-testid={`dream-tag-${dream.id}-${tag}`}>
-                            <Image
-                                src={getTagIcon(tag)}
-                                alt={tag}
-                                width={24}
-                                height={24}
-                                className="tag-icon"
-                            />
-                            <span>{tag}</span>
-                        </div>
-                    ))}
-                </div>
-                <button
-                    className="dream-action edit"
-                    onClick={() => router.push(`/edit?id=${dream.id}`)}
-                    data-testid={`edit-button-${dream.id}`}
+                )}
+                <div className="main-content">
+                <ul className="dream-list">
+                        {(dreams || []).map((dream, index) => {
+            const category = getCategory(dream);
+                            const isLastDream = index === dreams.length - 1;
+            return (
+                <li
+                                    key={`${dream.id}-${index}`}
+                                    ref={isLastDream ? lastDreamElementRef : null}
+                    className={`dream-item ${category}`}
+                    data-testid={`dream-item-${dream.id}`}
                 >
-                    Edit
+                    <div className="dream-header">
+                        <span className="dream-date" data-testid={`dream-date-${dream.id}`}>
+                            {dream.date}
+                        </span>
+                    </div>
+                    <h2 data-testid={`dream-title-${dream.id}`}>{dream.title}</h2>
+                    <p data-testid={`dream-content-${dream.id}`}>{dream.content}</p>
+                                    {dream.files && dream.files.length > 0 && (
+                                        <div className="dream-files">
+                                            {dream.files.map((file, index) => (
+                                                <div key={index} className="dream-file">
+                                                    <div className="file-name">{file.filename}</div>
+                                                    {file.type.startsWith("video/") ? (
+                                                        <div className="video-container">
+                                                            <video
+                                                                controls
+                                                                playsInline
+                                                                preload="metadata"
+                                                                onError={(e) => {
+                                                                    const target = e.target as HTMLVideoElement;
+                                                                    console.error('Video playback error:', {
+                                                                        code: target.error?.code,
+                                                                        message: target.error?.message
+                                                                    });
+                                                                }}
+                                                            >
+                                                                <source 
+                                                                    src={`http://localhost:5000/api/dreams/download/${encodeURIComponent(file.filename)}`}
+                                                                    type={file.type}
+                                                                />
+                                                                Your browser does not support the video tag.
+                                                            </video>
+                                                        </div>
+                                                    ) : (
+                                                        <div>Unsupported file type: {file.type}</div>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                    <p className="word-count" data-testid={`dream-word-count-${dream.id}`}>
+                        Word Count: {dream.wordCount}
+                    </p>
+                    <div className="dream-tags">
+                        {dream.tags.map((tag, tagIndex) => (
+                            <div key={tagIndex} className="tag" data-testid={`dream-tag-${dream.id}-${tag}`}>
+                                <Image
+                                    src={getTagIcon(tag)}
+                                    alt={tag}
+                                    width={24}
+                                    height={24}
+                                    className="tag-icon"
+                                />
+                                <span>{tag}</span>
+                            </div>
+                        ))}
+                    </div>
+                    <button
+                        className="dream-action edit"
+                        onClick={() => router.push(`/edit?id=${dream.id}`)}
+                        data-testid={`edit-button-${dream.id}`}
+                    >
+                        Edit
+                    </button>
+                    <button
+                        className="dream-action delete"
+                        onClick={() => handleDeleteDream(dream.id)}
+                        data-testid={`delete-button-${dream.id}`}
+                    >
+                        Delete
+                    </button>
+                </li>
+            );
+        })}
+    </ul>
+                    <Image
+                        src="/semimoon.svg"
+                        alt="Moon"
+                        width={300}
+                        height={500}
+                        className="moon-icon"
+                    />
+                </div>
+                {isLoading && <div className="loading-indicator">Loading more dreams...</div>}
+                <button
+                    className="add-dream-button"
+                    onClick={() => router.push("/add")}
+                    data-testid="add-dream-button"
+                >
+                    Add Dream
                 </button>
                 <button
-                    className="dream-action delete"
-                    onClick={() => handleDeleteDream(dream.id)}
-                    data-testid={`delete-button-${dream.id}`}
+                    className="generate-dreams-button"
+                    onClick={async () => {
+                        try {
+                            const response = await fetch("http://localhost:5000/api/dreams/generate-random-dreams", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ count: 20 }) // Generate 20 random dreams
+                            });
+                            if (!response.ok) {
+                                throw new Error("Failed to generate random dreams");
+                            }
+                            const data = await response.json();
+                            console.log(data.message);
+                            setCurrentPage(1); // Reset pagination to fetch the new dreams
+                            setHasMore(true);
+                        } catch (error) {
+                            console.error("Error generating random dreams:", error);
+                        }
+                    }}
+                    data-testid="generate-dreams-button"
                 >
-                    Delete
+                    Generate Random Dreams
                 </button>
-            </li>
-        );
-    })}
-</ul>
-                <Image
-                    src="/semimoon.svg"
-                    alt="Moon"
-                    width={300}
-                    height={500}
-                    className="moon-icon"
-                />
-            </div>
-            {isLoading && <div className="loading-indicator">Loading more dreams...</div>}
-            <button
-                className="add-dream-button"
-                onClick={() => router.push("/add")}
-                data-testid="add-dream-button"
-            >
-                Add Dream
-            </button>
-            <button
-                className="generate-dreams-button"
-                onClick={async () => {
-                    try {
-                        const response = await fetch("http://localhost:5000/api/dreams/generate-random-dreams", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ count: 20 }) // Generate 20 random dreams
-                        });
-                        if (!response.ok) {
-                            throw new Error("Failed to generate random dreams");
+                <button
+                    className="toggle-generation-button"
+                    onClick={async () => {
+                        try {
+                            const statusResponse = await fetch("http://localhost:5000/api/dreams/generation/status");
+                            const { isGenerating } = await statusResponse.json();
+                            
+                            const endpoint = isGenerating ? 'stop' : 'start';
+                            const response = await fetch(`http://localhost:5000/api/dreams/generation/${endpoint}`, {
+                                method: "POST",
+                            });
+                            
+                            if (!response.ok) {
+                                throw new Error(`Failed to ${endpoint} dream generation`);
+                            }
+                            
+                            const data = await response.json();
+                            console.log(data.message);
+                        } catch (error) {
+                            console.error("Error toggling dream generation:", error);
                         }
-                        const data = await response.json();
-                        console.log(data.message);
-                        setCurrentPage(1); // Reset pagination to fetch the new dreams
-                        setHasMore(true);
-                    } catch (error) {
-                        console.error("Error generating random dreams:", error);
-                    }
-                }}
-                data-testid="generate-dreams-button"
-            >
-                Generate Random Dreams
-            </button>
-            <button
-                className="toggle-generation-button"
-                onClick={async () => {
-                    try {
-                        const statusResponse = await fetch("http://localhost:5000/api/dreams/generation/status");
-                        const { isGenerating } = await statusResponse.json();
-                        
-                        const endpoint = isGenerating ? 'stop' : 'start';
-                        const response = await fetch(`http://localhost:5000/api/dreams/generation/${endpoint}`, {
-                            method: "POST",
-                        });
-                        
-                        if (!response.ok) {
-                            throw new Error(`Failed to ${endpoint} dream generation`);
-                        }
-                        
-                        const data = await response.json();
-                        console.log(data.message);
-                    } catch (error) {
-                        console.error("Error toggling dream generation:", error);
-                    }
-                }}
-                data-testid="toggle-generation-button"
-            >
-                Toggle Auto Generation
-            </button>
-           <div className="status-indicator">
-            {!isOnline && <p>⚠️ You are offline.</p>}
-            {isOnline && !isServerAvailable && <p>⚠️ Server is unavailable.</p>}
-                {isOnline && isServerAvailable && !isConnected && <p>⚠️ WebSocket disconnected. Attempting to reconnect...</p>}
-                {isOnline && isServerAvailable && isConnected && <p>✅ You are online and connected to the server.</p>}
-            </div>
-             {/* Add Analytics Section */}
-             <div className="analytics-section">
-                <h2>Dream Analytics</h2>
-                <div className="chart-container">
-                    <h3>Word Count Over Time</h3>
-                    <ResponsiveContainer width="100%" height={200}>
-                        <LineChart 
-                            data={chartData.wordCountData} 
-                            margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
-                        >
-                            <CartesianGrid strokeDasharray="3 3" stroke="#6a4c93" />
-                            <XAxis 
-                                dataKey="date" 
-                                tick={{ fill: '#f5f5f5' }} 
-                                stroke="#f5f5f5"
-                            />
-                            <YAxis 
-                                tick={{ fill: '#f5f5f5' }} 
-                                stroke="#f5f5f5"
-                                label={{ 
-                                    value: 'Word Count', 
-                                    angle: -90, 
-                                    position: 'insideLeft',
-                                    fill: '#f5f5f5'
-                                }}
-                            />
-                            <Tooltip 
-                                contentStyle={{ 
-                                    backgroundColor: '#2a1934',
-                                    border: '1px solid #6a4c93',
-                                    color: '#f5f5f5'
-                                }}
-                            />
-                            <Line 
-                                type="monotone" 
-                                dataKey="wordCount" 
-                                stroke="#ae0bcb" 
-                                strokeWidth={2} 
-                                dot={{ fill: '#ae0bcb', r: 4 }}
-                                activeDot={{ r: 6, fill: '#f5f5f5' }}
-                            />
-                        </LineChart>
-                    </ResponsiveContainer>
+                    }}
+                    data-testid="toggle-generation-button"
+                >
+                    Toggle Auto Generation
+                </button>
+               <div className="status-indicator">
+                {!isOnline && <p>⚠️ You are offline.</p>}
+                {isOnline && !isServerAvailable && <p>⚠️ Server is unavailable.</p>}
+                    {isOnline && isServerAvailable && !isConnected && <p>⚠️ WebSocket disconnected. Attempting to reconnect...</p>}
+                    {isOnline && isServerAvailable && isConnected && <p>✅ You are online and connected to the server.</p>}
+                </div>
+                 {/* Add Analytics Section */}
+                 <div className="analytics-section">
+                    <h2>Dream Analytics</h2>
+                    <div className="chart-container">
+                        <h3>Word Count Over Time</h3>
+                        <ResponsiveContainer width="100%" height={200}>
+                            <LineChart 
+                                data={chartData.wordCountData} 
+                                margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+                            >
+                                <CartesianGrid strokeDasharray="3 3" stroke="#6a4c93" />
+                                <XAxis 
+                                    dataKey="date" 
+                                    tick={{ fill: '#f5f5f5' }} 
+                                    stroke="#f5f5f5"
+                                />
+                                <YAxis 
+                                    tick={{ fill: '#f5f5f5' }} 
+                                    stroke="#f5f5f5"
+                                    label={{ 
+                                        value: 'Word Count', 
+                                        angle: -90, 
+                                        position: 'insideLeft',
+                                        fill: '#f5f5f5'
+                                    }}
+                                />
+                                <Tooltip 
+                                    contentStyle={{ 
+                                        backgroundColor: '#2a1934',
+                                        border: '1px solid #6a4c93',
+                                        color: '#f5f5f5'
+                                    }}
+                                />
+                                <Line 
+                                    type="monotone" 
+                                    dataKey="wordCount" 
+                                    stroke="#ae0bcb" 
+                                    strokeWidth={2} 
+                                    dot={{ fill: '#ae0bcb', r: 4 }}
+                                    activeDot={{ r: 6, fill: '#f5f5f5' }}
+                                />
+                            </LineChart>
+                        </ResponsiveContainer>
 
-                    <h3>Tag Distribution</h3>
-                    <ResponsiveContainer width="100%" height={200}>
-                        <BarChart 
-                            data={chartData.tagData}
-                            margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
-                        >
-                            <CartesianGrid strokeDasharray="3 3" stroke="#6a4c93" />
-                            <XAxis 
-                                dataKey="tag" 
-                                tick={{ fill: '#f5f5f5' }} 
-                                stroke="#f5f5f5"
-                            />
-                            <YAxis 
-                                tick={{ fill: '#f5f5f5' }} 
-                                stroke="#f5f5f5"
-                                label={{ 
-                                    value: 'Number of Dreams', 
-                                    angle: -90, 
-                                    position: 'insideLeft',
-                                    fill: '#f5f5f5'
-                                }}
-                            />
-                            <Tooltip 
-                                contentStyle={{ 
-                                    backgroundColor: '#2a1934',
-                                    border: '1px solid #6a4c93',
-                                    color: '#f5f5f5'
-                                }}
-                            />
-                            <Bar 
-                                dataKey="count" 
-                                fill="#ae0bcb"
-                            />
-                        </BarChart>
-                    </ResponsiveContainer>
+                        <h3>Tag Distribution</h3>
+                        <ResponsiveContainer width="100%" height={200}>
+                            <BarChart 
+                                data={chartData.tagData}
+                                margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+                            >
+                                <CartesianGrid strokeDasharray="3 3" stroke="#6a4c93" />
+                                <XAxis 
+                                    dataKey="tag" 
+                                    tick={{ fill: '#f5f5f5' }} 
+                                    stroke="#f5f5f5"
+                                />
+                                <YAxis 
+                                    tick={{ fill: '#f5f5f5' }} 
+                                    stroke="#f5f5f5"
+                                    label={{ 
+                                        value: 'Number of Dreams', 
+                                        angle: -90, 
+                                        position: 'insideLeft',
+                                        fill: '#f5f5f5'
+                                    }}
+                                />
+                                <Tooltip 
+                                    contentStyle={{ 
+                                        backgroundColor: '#2a1934',
+                                        border: '1px solid #6a4c93',
+                                        color: '#f5f5f5'
+                                    }}
+                                />
+                                <Bar 
+                                    dataKey="count" 
+                                    fill="#ae0bcb"
+                                />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
                 </div>
             </div>
-        </div>
+        </Suspense>
     );
 }

@@ -9,7 +9,7 @@ const sequelize = require('./config/database');
 const { Dream, Tag, User, ActivityLog } = require('./models/associations');
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Create HTTP server
 const server = http.createServer(app);
@@ -110,7 +110,7 @@ async function startServer() {
     }
 
     // Start the server
-    server.listen(PORT, () => {
+    server.listen(PORT, '0.0.0.0', () => {
       console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {

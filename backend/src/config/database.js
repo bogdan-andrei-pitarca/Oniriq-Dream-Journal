@@ -1,9 +1,14 @@
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('Dreams', 'postgres', 'macaroane13', {
-    host: 'localhost',
-    dialect: 'postgres', // Change to your database dialect (e.g., mysql, sqlite)
-    logging: false, // Disable logging for cleaner output
+const sequelize = new Sequelize(process.env.DATABASE_URL || 'postgres://postgres:macaroane13@localhost:5432/Dreams', {
+    dialect: 'postgres',
+    logging: false,
+    dialectOptions: {
+        ssl: process.env.NODE_ENV === 'production' ? {
+            require: true,
+            rejectUnauthorized: false
+        } : false
+    },
     pool: {
         max: 5,
         min: 0,
@@ -11,8 +16,8 @@ const sequelize = new Sequelize('Dreams', 'postgres', 'macaroane13', {
         idle: 10000
     },
     retry: {
-        max: 3, // Maximum amount of connection retries
-        timeout: 30000 // Timeout before a retry (in milliseconds)
+        max: 3,
+        timeout: 30000
     }
 });
 

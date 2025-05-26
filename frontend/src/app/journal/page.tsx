@@ -179,7 +179,7 @@ export default function Journal() {
         };
 
         syncOperations();
-    }, [isOnline, isServerAvailable, fetchDreamsFromAPI, setDreams]);
+    }, [isOnline, isServerAvailable, fetchDreamsFromAPI]);
 
     // Separate useEffect for handling WebSocket messages to prevent interference
     useEffect(() => {

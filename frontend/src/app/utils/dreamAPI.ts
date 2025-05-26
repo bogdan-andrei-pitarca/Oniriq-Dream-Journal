@@ -2,7 +2,7 @@ const API_BASE_URL = "http://localhost:5000/api/dreams"; // Update with your bac
 
 const getAuthHeader = () => {
     const token = localStorage.getItem('token');
-    return token ? { 'Authorization': `Bearer ${token}` } : {};
+    return token ? { 'Authorization': `Bearer ${token}` } : undefined;
 };
 
 export const fetchDreams = async (params: Record<string, string | number>) => {
@@ -12,22 +12,22 @@ export const fetchDreams = async (params: Record<string, string | number>) => {
             return acc;
         }, {} as Record<string, string>)
     ).toString();
+    const headers = getAuthHeader();
     const response = await fetch(`${API_BASE_URL}?${query}`, {
-        headers: {
-            ...getAuthHeader()
-        }
+        headers: headers ? headers : undefined
     });
     if (!response.ok) throw new Error("Failed to fetch dreams");
     return response.json();
 };
 
 export const createDream = async (dream: { title: string; content: string; date: string; tags: string[] }) => {
+    const headers: HeadersInit = { 
+        "Content-Type": "application/json",
+        ...getAuthHeader()
+    };
     const response = await fetch(API_BASE_URL, {
         method: "POST",
-        headers: { 
-            "Content-Type": "application/json",
-            ...getAuthHeader()
-        },
+        headers: headers,
         body: JSON.stringify(dream),
     });
     if (!response.ok) throw new Error("Failed to create dream");
@@ -35,12 +35,13 @@ export const createDream = async (dream: { title: string; content: string; date:
 };
 
 export const updateDream = async (id: string, dream: { title: string; content: string; date: string; tags: string[] }) => {
+    const headers: HeadersInit = { 
+        "Content-Type": "application/json",
+        ...getAuthHeader()
+    };
     const response = await fetch(`${API_BASE_URL}/${id}`, {
         method: "PATCH",
-        headers: { 
-            "Content-Type": "application/json",
-            ...getAuthHeader()
-        },
+        headers: headers,
         body: JSON.stringify(dream),
     });
     if (!response.ok) throw new Error("Failed to update dream");
@@ -48,9 +49,10 @@ export const updateDream = async (id: string, dream: { title: string; content: s
 };
 
 export const deleteDream = async (id: string) => {
+    const headers = getAuthHeader();
     const response = await fetch(`${API_BASE_URL}/${id}`, { 
         method: "DELETE",
-        headers: getAuthHeader()
+        headers: headers ? headers : undefined
     });
     if (!response.ok) throw new Error("Failed to delete dream");
 };

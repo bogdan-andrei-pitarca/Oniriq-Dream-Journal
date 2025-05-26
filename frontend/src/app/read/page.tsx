@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import "./read.css";
-import useNetworkStatus from "../hooks/useNetworkStatus";
+import { useNetworkStatus } from "../hooks/useNetworkStatus";
 
 type Dream = {
     id: string;

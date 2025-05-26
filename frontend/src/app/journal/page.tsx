@@ -195,7 +195,7 @@ export default function Journal() {
                 setCurrentPage(1);
                 fetchDreamsFromAPI(1);
             }
-        } catch (error: any) {
+        } catch (error) {
             console.error("Error deleting dream:", error);
         }
     };
@@ -363,7 +363,7 @@ export default function Journal() {
                                 <select
                                     value={sortOrder}
                                     onChange={(e) => {
-                                        setSortOrder(e.target.value as any);
+                                        setSortOrder(e.target.value as "asc" | "desc" | "dateAsc" | "dateDesc" | "");
                                         setCurrentPage(1);
                                         setHasMore(true);
                                     }}

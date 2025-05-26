@@ -110,8 +110,13 @@ export default function EditDream() {
                 const operations = await getOperationsFromDB();
                 for (const operation of operations) {
                     try {
-                        if (operation.type === "edit" && operation.id) {
-                            await updateDream(operation.id, operation.updatedFields);
+                        if (operation.type === "edit" && operation.id && operation.updatedFields) {
+                            await updateDream(operation.id, {
+                                title: operation.updatedFields.title ?? "",
+                                content: operation.updatedFields.content ?? "",
+                                date: new Date().toISOString(),
+                                tags: operation.updatedFields.tags ?? [],
+                            });
                         }
                     } catch (error) {
                         console.error("Error syncing operation:", error);

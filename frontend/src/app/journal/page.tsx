@@ -43,22 +43,33 @@ export default function Journal() {
     }, [isLoading, isFetching, hasMore]);
 
     // WebSocket message handler
-    const handleWebSocketMessage = useCallback((message: { type: string; data: any }) => {
+    const handleWebSocketMessage = useCallback((message: { type: string; data: unknown }) => {
         switch (message.type) {
-            case 'initial':
-                setDreams(message.data as Dream[]);
+            case 'initial': {
+                if (Array.isArray(message.data)) {
+                    setDreams(message.data as Dream[]);
+                }
                 break;
+            }
             case 'newDream':
-                setDreams(prev => [...prev, message.data as Dream]);
+            case 'updatedDream': {
+                if (typeof message.data === 'object' && message.data !== null && 'id' in message.data) {
+                    setDreams(prev =>
+                        message.type === 'newDream'
+                            ? [...prev, message.data as Dream]
+                            : prev.map(dream =>
+                                dream.id === (message.data as Dream).id ? (message.data as Dream) : dream
+                            )
+                    );
+                }
                 break;
-            case 'updatedDream':
-                setDreams(prev => prev.map(dream => 
-                    dream.id === (message.data as Dream).id ? message.data as Dream : dream
-                ));
+            }
+            case 'deletedDream': {
+                if (typeof message.data === 'object' && message.data !== null && 'id' in message.data) {
+                    setDreams(prev => prev.filter(dream => dream.id !== (message.data as { id: string }).id));
+                }
                 break;
-            case 'deletedDream':
-                setDreams(prev => prev.filter(dream => dream.id !== message.data.id));
-                break;
+            }
         }
     }, [setDreams]);
 
@@ -195,7 +206,7 @@ export default function Journal() {
                 setCurrentPage(1);
                 fetchDreamsFromAPI(1);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error deleting dream:", error);
         }
     };
@@ -363,7 +374,7 @@ export default function Journal() {
                                 <select
                                     value={sortOrder}
                                     onChange={(e) => {
-                                        setSortOrder(e.target.value as "asc" | "desc" | "dateAsc" | "dateDesc" | "");
+                                        setSortOrder(e.target.value as any);
                                         setCurrentPage(1);
                                         setHasMore(true);
                                     }}

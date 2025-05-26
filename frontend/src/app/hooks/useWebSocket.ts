@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 
 interface WebSocketMessage {
     type: 'initial' | 'newDream' | 'updatedDream' | 'deletedDream';
-    data: any;
+    data: unknown;
 }
 
 export const useWebSocket = (onMessage: (message: WebSocketMessage) => void) => {

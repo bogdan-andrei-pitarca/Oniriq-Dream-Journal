@@ -33,7 +33,7 @@ export const addOperationToDB = async (operation: { type: string; dream?: Dream;
 };
 
 export const getOperationsFromDB = async (): Promise<{
-    updatedFields: any; type: string; dream?: Dream; id?: string 
+    type: string; dream?: Dream; id?: string; updatedFields?: any  // Keeping updatedFields as any for now, but better to define a specific type if possible
 }[]> => {
     const db = await initDB();
     return await db.getAll("operations");

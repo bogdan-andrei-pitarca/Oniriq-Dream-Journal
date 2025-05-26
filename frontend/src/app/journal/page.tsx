@@ -46,14 +46,14 @@ export default function Journal() {
     const handleWebSocketMessage = useCallback((message: { type: string; data: any }) => {
         switch (message.type) {
             case 'initial':
-                setDreams(message.data);
+                setDreams(message.data as Dream[]);
                 break;
             case 'newDream':
-                setDreams(prev => [...prev, message.data]);
+                setDreams(prev => [...prev, message.data as Dream]);
                 break;
             case 'updatedDream':
                 setDreams(prev => prev.map(dream => 
-                    dream.id === message.data.id ? message.data : dream
+                    dream.id === (message.data as Dream).id ? message.data as Dream : dream
                 ));
                 break;
             case 'deletedDream':
@@ -195,7 +195,7 @@ export default function Journal() {
                 setCurrentPage(1);
                 fetchDreamsFromAPI(1);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error deleting dream:", error);
         }
     };
@@ -250,12 +250,12 @@ export default function Journal() {
         };
 
         // Sort dreams by date
-        const sortedDreams = [...dreams].sort((a, b) => 
+        const sortedDreams = [...dreams].sort((a: Dream, b: Dream) => 
             new Date(a.date).getTime() - new Date(b.date).getTime()
         );
 
         // Create data for word count over time
-        const wordCountData = sortedDreams.map((dream, index) => ({
+        const wordCountData = sortedDreams.map((dream: Dream, index: number) => ({
             date: dream.date,
             wordCount: calculateWordCount(dream.content),
             index: index + 1 // For x-axis labeling
@@ -263,13 +263,13 @@ export default function Journal() {
 
         // Create data for tag frequency
         const tagCounts: { [key: string]: number } = {};
-        dreams.forEach(dream => {
-            dream.tags.forEach(tag => {
+        dreams.forEach((dream: Dream) => {
+            dream.tags.forEach((tag: string) => {
                 tagCounts[tag] = (tagCounts[tag] || 0) + 1;
             });
         });
 
-        const tagData = Object.entries(tagCounts).map(([tag, count]) => ({
+        const tagData = Object.entries(tagCounts).map(([tag, count]: [string, number]) => ({
             tag,
             count
         }));

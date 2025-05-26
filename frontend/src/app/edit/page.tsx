@@ -19,7 +19,7 @@ export default function EditDream() {
     const [title, setTitle] = useState(""); // Default to an empty string
     const [content, setContent] = useState(""); // Default to an empty string
     const [tags, setTags] = useState<string[]>([]); // Default to an empty array
-    const [availableTags, setAvailableTags] = useState<string[]>([
+    const [availableTags] = useState<string[]>([
         "Location",
         "People",
         "Creatures & Animals",

@@ -8,7 +8,6 @@ import "./journal.css";
 import { useNetworkStatus } from "../hooks/useNetworkStatus";
 import { useWebSocket } from "../hooks/useWebSocket";
 import { getDreamsFromDB, addOperationToDB, addDreamToDB, getOperationsFromDB, clearOperationsFromDB } from "../utils/dreamIDB"; // Import IndexedDB utilities
-import { FileUpload } from '../components/FileUpload';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { fetchDreams, deleteDream } from "../utils/dreamAPI";
 
@@ -28,7 +27,7 @@ export default function Journal() {
     const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "dateAsc" | "dateDesc" | "">("");
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, /* setIsLoading */] = useState(false); // Keep isLoading if used, remove setIsLoading
     const [isFetching, setIsFetching] = useState(false);  // New state for tracking fetch status
     const { isOnline, isServerAvailable } = useNetworkStatus();
     const observer = useRef<IntersectionObserver | null>(null);
@@ -236,7 +235,6 @@ export default function Journal() {
         Math.ceil(sortedDreams.length / 3),
         Math.ceil((2 * sortedDreams.length) / 3)
     );
-    const bottom33 = sortedDreams.slice(Math.ceil((2 * sortedDreams.length) / 3));
 
     const getCategory = (dream: { id: string }) => {
         if (top33.some((d) => d.id === dream.id)) return "top";

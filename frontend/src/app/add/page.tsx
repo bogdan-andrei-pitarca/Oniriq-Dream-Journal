@@ -30,7 +30,7 @@ export default function AddDream() {
                 for (const operation of operations) {
                     try {
                         if (operation.type === "add" && operation.dream) {
-                            const { id, files, ...dreamData } = operation.dream;
+                            const { ...dreamData } = operation.dream;
                             await createDream(dreamData);
                         }
                     } catch (error) {

@@ -23,7 +23,7 @@ export const useNetworkStatus = () => {
     // Function to check server availability - will determine the correct URL at runtime
     const checkServerAvailability = async () => {
         // Use the environment variable directly here at runtime
-        const apiUrl =  `https://oniriq-dream-journal-production.up.railway.app/api`;
+        const apiUrl =  `https://${process.env.NEXT_PUBLIC_API_URL}/api`;
         console.log('Checking server availability at:', apiUrl); // Log the URL being used
 
         try {

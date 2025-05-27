@@ -78,7 +78,8 @@ async function createIndices() {
     await sequelize.query('CREATE INDEX IF NOT EXISTS idx_tags_name ON "Tags" (name)');
     
     // Add index for recent dreams
-    await sequelize.query('CREATE INDEX IF NOT EXISTS idx_dreams_recent ON "Dreams" (date DESC) WHERE date >= NOW() - INTERVAL \'1 year\'');
+    // Removed problematic index creation due to IMMUTABLE function requirement in predicate
+    // await sequelize.query('CREATE INDEX IF NOT EXISTS idx_dreams_recent ON "Dreams" (date DESC) WHERE date >= NOW() - INTERVAL \'1 year\'');
 }
 
 async function seed() {

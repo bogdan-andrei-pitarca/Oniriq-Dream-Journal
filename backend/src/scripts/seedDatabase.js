@@ -2,8 +2,8 @@ const { faker } = require('@faker-js/faker');
 const { Dream, Tag } = require('../models/associations');
 const sequelize = require('../config/database');
 
-const DREAMS_COUNT = 150000;
-const TAGS_COUNT = 150000;
+const DREAMS_COUNT = 1000;
+const TAGS_COUNT = 1000;
 const MAX_TAGS_PER_DREAM = 5;
 
 async function generateTags() {

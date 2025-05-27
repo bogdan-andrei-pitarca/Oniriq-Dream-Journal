@@ -28,12 +28,18 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    # Define environment variables for the frontend
+      # Add build arguments to pass NEXT_PUBLIC_ variables during the build
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        NEXT_PUBLIC_WEBSOCKET_URL: ${NEXT_PUBLIC_WEBSOCKET_URL}
+        # Add any other NEXT_PUBLIC_ variables here as args
+    # Define environment variables for the frontend (also needed at runtime)
     environment:
       # Railway automatically injects PORT for the frontend container
       PORT: ${PORT} # Next.js production server listens on this by default
 
       # Custom NEXT_PUBLIC_ variables needed by your frontend (client-side and server-side)
+      # List them here again so they are available at runtime too, even though inlined during build
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
       NEXT_PUBLIC_WEBSOCKET_URL: ${NEXT_PUBLIC_WEBSOCKET_URL}
 

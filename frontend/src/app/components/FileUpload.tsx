@@ -9,6 +9,8 @@ interface FileUploadProps {
     acceptedFileTypes?: string; // e.g., "video/*,image/*"
 }
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ? `https://${process.env.NEXT_PUBLIC_API_URL}/api` : 'http://localhost:5000/api';
+
 export const FileUpload = ({
     entityId,
     onUploadSuccess,
@@ -32,7 +34,7 @@ export const FileUpload = ({
         formData.append('chunkIndex', chunkIndex.toString());
         formData.append('totalChunks', totalChunks.toString());
 
-        const response = await fetch('http://localhost:5000/api/dreams/upload-chunk', {
+        const response = await fetch(`${API_BASE_URL}/dreams/upload-chunk`, {
             method: 'POST',
             body: formData,
             signal: abortController.current?.signal
@@ -75,7 +77,7 @@ export const FileUpload = ({
             }
 
             // Complete the upload
-            const response = await fetch('http://localhost:5000/api/dreams/complete-upload', {
+            const response = await fetch(`${API_BASE_URL}/dreams/complete-upload`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

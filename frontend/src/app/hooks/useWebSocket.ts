@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 
-interface WebSocketMessage {
+export interface WebSocketMessage {
     type: 'initial' | 'newDream' | 'updatedDream' | 'deletedDream';
     data: unknown;
 }

@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ? `https://${process.env.NEXT_PUBLIC_API_URL}/api` : 'http://localhost:5000/api';
+
 export const useNetworkStatus = () => {
     const [isOnline, setIsOnline] = useState(true);
     const [isServerAvailable, setIsServerAvailable] = useState(true);
@@ -24,7 +26,7 @@ export const useNetworkStatus = () => {
         // Function to check server availability
         const checkServerAvailability = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/health');
+                const response = await fetch(`${API_BASE_URL}/health`);
                 setIsServerAvailable(response.ok);
             } catch {
                 setIsServerAvailable(false);

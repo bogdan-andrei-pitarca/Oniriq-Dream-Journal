@@ -11,7 +11,7 @@ interface User {
   role: string;
 }
 
-const API_URL = 'http://localhost:5000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ? `https://${process.env.NEXT_PUBLIC_API_URL}/api` : 'http://localhost:5000/api';
 
 export default function MonitoredUsersPage() {
   const [monitoredUsers, setMonitoredUsers] = useState<User[]>([]);
@@ -33,7 +33,7 @@ export default function MonitoredUsersPage() {
 
     const fetchMonitoredUsers = async () => {
       try {
-        const response = await fetch(`${API_URL}/users/monitored`, {
+        const response = await fetch(`${API_BASE_URL}/users/monitored`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }

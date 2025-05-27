@@ -11,6 +11,8 @@ import { getDreamsFromDB, addOperationToDB, addDreamToDB, getOperationsFromDB, c
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { fetchDreams, deleteDream } from "../utils/dreamAPI";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ? `https://${process.env.NEXT_PUBLIC_API_URL}/api` : 'http://localhost:5000/api';
+
 interface DreamWithWordCount extends Dream {
     wordCount: number;
 }
@@ -150,7 +152,7 @@ export default function Journal() {
                         for (const operation of operations) {
                             try {
                                 if (operation.type === "delete") {
-                                    await fetch(`http://localhost:5000/api/dreams?id=${operation.id}`, {
+                                    await fetch(`${API_BASE_URL}/dreams?id=${operation.id}`, {
                                         method: "DELETE",
                                     });
                                 }
@@ -433,7 +435,7 @@ export default function Journal() {
                                                                 }}
                                                             >
                                                                 <source 
-                                                                    src={`http://localhost:5000/api/dreams/download/${encodeURIComponent(file.filename)}`}
+                                                                    src={`${API_BASE_URL}/dreams/download/${encodeURIComponent(file.filename)}`}
                                                                     type={file.type}
                                                                 />
                                                                 Your browser does not support the video tag.
@@ -501,7 +503,7 @@ export default function Journal() {
                     className="generate-dreams-button"
                     onClick={async () => {
                         try {
-                            const response = await fetch("http://localhost:5000/api/dreams/generate-random-dreams", {
+                            const response = await fetch(`${API_BASE_URL}/dreams/generate-random-dreams`, {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify({ count: 20 }) // Generate 20 random dreams
@@ -525,11 +527,11 @@ export default function Journal() {
                     className="toggle-generation-button"
                     onClick={async () => {
                         try {
-                            const statusResponse = await fetch("http://localhost:5000/api/dreams/generation/status");
+                            const statusResponse = await fetch(`${API_BASE_URL}/dreams/generation/status`);
                             const { isGenerating } = await statusResponse.json();
                             
                             const endpoint = isGenerating ? 'stop' : 'start';
-                            const response = await fetch(`http://localhost:5000/api/dreams/generation/${endpoint}`, {
+                            const response = await fetch(`${API_BASE_URL}/dreams/generation/${endpoint}`, {
                                 method: "POST",
                             });
                             

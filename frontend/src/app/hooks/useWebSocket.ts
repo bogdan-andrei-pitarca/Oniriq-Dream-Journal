@@ -5,7 +5,7 @@ export interface WebSocketMessage {
     data: unknown;
 }
 
-const websocketUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'ws://localhost:5000';
+const websocketUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL;
 
 export const useWebSocket = (onMessage: (message: WebSocketMessage) => void) => {
     const [isConnected, setIsConnected] = useState(false);

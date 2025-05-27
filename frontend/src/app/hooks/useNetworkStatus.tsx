@@ -1,9 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 
-// Keep the fallback for local dev
-const API_BASE_URL_DEV = 'http://localhost:5000/api';
-
 export const useNetworkStatus = () => {
     const [isOnline, setIsOnline] = useState(true);
     const [isServerAvailable, setIsServerAvailable] = useState(true);

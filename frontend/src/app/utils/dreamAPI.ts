@@ -1,3 +1,9 @@
+import { useNetworkStatus } from "../hooks/useNetworkStatus";
+import { useWebSocket } from "../hooks/useWebSocket";
+import { getDreamsFromDB, addOperationToDB, addDreamToDB, getOperationsFromDB, clearOperationsFromDB } from "../utils/dreamIDB"; // Import IndexedDB utilities
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { fetchDreams, deleteDream } from "../utils/dreamAPI";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ? `https://${process.env.NEXT_PUBLIC_API_URL}/api/dreams` : "http://localhost:5000/api/dreams";
 
 const getAuthHeader = () => {
@@ -13,11 +19,21 @@ export const fetchDreams = async (params: Record<string, string | number>) => {
         }, {} as Record<string, string>)
     ).toString();
     const headers = getAuthHeader();
-    const response = await fetch(`${API_BASE_URL}?${query}`, {
-        headers: headers ? headers : undefined
-    });
-    if (!response.ok) throw new Error("Failed to fetch dreams");
-    return response.json();
+
+    const requestUrl = `${API_BASE_URL}?${query}`;
+    console.log('Attempting to fetch dreams from URL:', requestUrl);
+    console.log('Fetch options (headers):', headers);
+
+    try {
+        const response = await fetch(requestUrl, {
+            headers: headers ? headers : undefined
+        });
+        if (!response.ok) throw new Error("Failed to fetch dreams");
+        return response.json();
+    } catch (error) {
+        console.error("Error fetching dreams:", error);
+        throw error;
+    }
 };
 
 export const createDream = async (dream: { title: string; content: string; date: string; tags: string[] }) => {

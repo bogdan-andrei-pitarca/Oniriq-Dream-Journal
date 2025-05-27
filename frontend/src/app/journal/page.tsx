@@ -500,30 +500,6 @@ export default function Journal() {
                     Add Dream
                 </button>
                 <button
-                    className="generate-dreams-button"
-                    onClick={async () => {
-                        try {
-                            const response = await fetch(`${API_BASE_URL}/dreams/generate-random-dreams`, {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ count: 20 }) // Generate 20 random dreams
-                            });
-                            if (!response.ok) {
-                                throw new Error("Failed to generate random dreams");
-                            }
-                            const data = await response.json();
-                            console.log(data.message);
-                            setCurrentPage(1); // Reset pagination to fetch the new dreams
-                            setHasMore(true);
-                        } catch (error) {
-                            console.error("Error generating random dreams:", error);
-                        }
-                    }}
-                    data-testid="generate-dreams-button"
-                >
-                    Generate Random Dreams
-                </button>
-                <button
                     className="toggle-generation-button"
                     onClick={async () => {
                         try {

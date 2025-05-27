@@ -11,7 +11,7 @@ import { getDreamsFromDB, addOperationToDB, addDreamToDB, getOperationsFromDB, c
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { fetchDreams, deleteDream } from "../utils/dreamAPI";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ? `https://${process.env.NEXT_PUBLIC_API_URL}/api` : 'http://localhost:5000/api';
+const API_BASE_URL = `https://oniriq-dream-journal-production.up.railway.app/api`;
 
 interface DreamWithWordCount extends Dream {
     wordCount: number;

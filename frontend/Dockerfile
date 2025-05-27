@@ -1,43 +1,30 @@
 # Stage 1: Build the Next.js application
-# Use a Node.js image with a later version suitable for building
 FROM node:20-alpine AS builder
-
-# Set the working directory for the builder stage
 WORKDIR /app
-
-# Copy package.json and package-lock.json (or yarn.lock)
 COPY package*.json ./
-
-# Install dependencies, including devDependencies needed for the build
 RUN npm install
-
-# Copy the rest of your frontend source code
 COPY . .
-
-# Build the Next.js application
-# Ensure your build script in package.json is 'next build'
 RUN npm run build
 
 # Stage 2: Run the production application
-# Use a minimal base image, as the standalone output includes Node.js
-FROM node:20-alpine
+# Use a Node.js image that includes npm
+FROM node:20-alpine AS runner
 
-# Set the working directory for the runner stage
-# This should match the output directory of the standalone build
+# Set the working directory
 WORKDIR /app
 
-# Copy the standalone output from the builder stage
-# The path /.next/standalone is relative to the builder's WORKDIR
-COPY --from=builder /app/.next/standalone ./
-
-# Copy the public directory from the original source
-# This is needed for static assets like favicon.ico, images, etc.
+# Copy necessary files from the builder stage
+# Copy production dependencies (node_modules)
+COPY --from=builder /app/node_modules ./node_modules
+# Copy the build output
+COPY --from=builder /app/.next ./.next
+# Copy package.json (needed for 'npm start')
+COPY --from=builder /app/package.json ./package.json
+# Copy the public directory for static assets
 COPY --from=builder /app/public ./public
 
-# Expose the port Next.js production server listens on (typically 3000 by default, but can be set by PORT env var)
-# Railway will manage port mapping externally.
+# Expose the port Next.js listens on (default 3000)
 EXPOSE 3000
 
-# Command to run the standalone Next.js server
-# This matches the Start Command we configured on Railway earlier
-CMD ["node", "server.js"]
+# Command to run the production server using the start script
+CMD ["npm", "start"]

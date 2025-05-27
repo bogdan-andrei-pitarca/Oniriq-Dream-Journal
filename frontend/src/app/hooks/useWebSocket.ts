@@ -20,8 +20,14 @@ export const useWebSocket = (onMessage: (message: WebSocketMessage) => void) => 
             return;
         }
 
+        // Temporary logs to check environment variable value
+        console.log('WebSocket URL from env:', process.env.NEXT_PUBLIC_WEBSOCKET_URL);
+        console.log('Using websocketUrl:', websocketUrl);
+
         try {
-            ws.current = new WebSocket(websocketUrl);
+            // Use the determined websocketUrl
+            // Cast to string to satisfy TypeScript, as we have a fallback
+            ws.current = new WebSocket(websocketUrl as string);
 
             ws.current.onopen = () => {
                 console.log('WebSocket connected');
@@ -41,7 +47,7 @@ export const useWebSocket = (onMessage: (message: WebSocketMessage) => void) => 
             ws.current.onclose = () => {
                 console.log('WebSocket disconnected');
                 setIsConnected(false);
-                
+
                 // Attempt to reconnect with exponential backoff
                 if (reconnectAttempts.current < maxReconnectAttempts) {
                     const delay = baseReconnectDelay * Math.pow(2, reconnectAttempts.current);
@@ -80,4 +86,4 @@ export const useWebSocket = (onMessage: (message: WebSocketMessage) => void) => 
     }, [connect]);
 
     return { isConnected };
-}; 
+};

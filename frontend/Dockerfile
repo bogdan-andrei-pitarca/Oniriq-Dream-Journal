@@ -28,6 +28,15 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/public ./public
 
-EXPOSE 8080
+# Set runtime environment variables (redundant for NEXT_PUBLIC_ due to inlining, but good practice)
+# These will be available in the serverless functions/server-side code
+ENV NODE_ENV=production
+# Removed hardcoded PORT environment variable
+# ENV PORT=3000
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+ENV NEXT_PUBLIC_WEBSOCKET_URL=${NEXT_PUBLIC_WEBSOCKET_URL}
+
+# Expose the port Next.js listens on (default 3000)
+EXPOSE 3000
 
 CMD ["npm", "start"]

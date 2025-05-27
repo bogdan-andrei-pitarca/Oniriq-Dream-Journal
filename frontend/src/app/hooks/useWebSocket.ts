@@ -5,6 +5,8 @@ interface WebSocketMessage {
     data: unknown;
 }
 
+const websocketUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'ws://localhost:5000';
+
 export const useWebSocket = (onMessage: (message: WebSocketMessage) => void) => {
     const [isConnected, setIsConnected] = useState(false);
     const ws = useRef<WebSocket | null>(null);
@@ -19,7 +21,7 @@ export const useWebSocket = (onMessage: (message: WebSocketMessage) => void) => 
         }
 
         try {
-            ws.current = new WebSocket('ws://localhost:5000');
+            ws.current = new WebSocket(websocketUrl);
 
             ws.current.onopen = () => {
                 console.log('WebSocket connected');

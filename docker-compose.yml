@@ -8,20 +8,18 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    # Map the port inside the container to a port on the host (useful for local testing, Railway handles this differently)
-    # Remove or comment out for production on Railway if you rely solely on their networking
-    # ports:
-    #   - "5000:5000"
     # Define environment variables for the backend
     environment:
       # Railway automatically injects DATABASE_URL, NODE_ENV, and PORT
-      # Include any other non-sensitive variables needed by your backend
-      # Sensitive variables should be managed via Railway dashboard
-      FRONTEND_URL: ${FRONTEND_URL} # Example: Should be set in Railway env vars
-      # Other non-sensitive variables...
-    # Define volumes if you need persistent storage (e.g., for uploads, though typically managed by S3/other services in prod)
-    # volumes:
-    #   - ./backend/src/uploads:/app/src/uploads # Example volume mapping
+      # Listing them here makes it explicit and can override Railway defaults if needed (use with caution)
+      DATABASE_URL: ${DATABASE_URL}
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${PORT} # Ensure your backend code uses process.env.PORT
+
+      # Custom variables needed by your backend
+      FRONTEND_URL: ${FRONTEND_URL}
+
+      # Other non-sensitive variables your backend might need...
     # Restart policy for the container
     restart: unless-stopped
 
@@ -30,28 +28,22 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    # Map the port (Next.js listens on 3000 by default unless PORT is set)
-    # Remove or comment out for production on Railway if you rely solely on their networking
-    # ports:
-    #   - "3000:3000"
     # Define environment variables for the frontend
     environment:
-      # Railway automatically injects PORT
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL} # Must be set in Railway env vars
-      NEXT_PUBLIC_WEBSOCKET_URL: ${NEXT_PUBLIC_WEBSOCKET_URL} # Must be set in Railway env vars
-      # Other NEXT_PUBLIC_ variables...
+      # Railway automatically injects PORT for the frontend container
+      PORT: ${PORT} # Next.js production server listens on this by default
+
+      # Custom NEXT_PUBLIC_ variables needed by your frontend (client-side and server-side)
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      NEXT_PUBLIC_WEBSOCKET_URL: ${NEXT_PUBLIC_WEBSOCKET_URL}
+
+      # List any other NEXT_PUBLIC_ variables your frontend uses...
     # Ensure the frontend service depends on the backend service starting first
-    # This doesn't guarantee the backend is "ready", just that the container starts
     depends_on:
       - backend
     # Restart policy for the container
     restart: unless-stopped
 
 # Define networks if needed (Docker Compose creates a default bridge network)
-# networks:
-#   default:
-#     driver: bridge
-
-# Define volumes if needed (e.g., for database data, although managed by Railway/RDS)
 # volumes:
 #   db_data: # Example volume for database

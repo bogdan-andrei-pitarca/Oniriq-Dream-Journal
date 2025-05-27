@@ -38,7 +38,7 @@ export default function AddDream() {
                     }
                 }
                 await clearOperationsFromDB();
-                alert("All pending operations have been synced with the server.");
+                // alert("All pending operations have been synced with the server.");
             }
         };
 
